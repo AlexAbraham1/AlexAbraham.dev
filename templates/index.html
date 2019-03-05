@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> 
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1,requiresActiveX=true">
+    
+    
+	<title>Alex Abraham :: CV </title>
+	<meta name="description" content=" add description  ... ">
+    
+    <!-- /// Favicons ////////  -->
+    <link rel="shortcut icon" href="/static/favicon.png">
+
+
+	<!-- /// Template CSS ////////  -->
+    <link rel="stylesheet" href="/static/_layout/css/base.css">
+    <link rel="stylesheet" href="/static/_layout/css/grid.css">
+    <link rel="stylesheet" href="/static/_layout/css/elements.css">
+    <link rel="stylesheet" href="/static/_layout/css/layout.css">
+
+	<!-- /// JS Plugins CSS ////////  -->
+    <link rel="stylesheet" href="/static/_layout/js/bxslider/jquery.bxslider.css">
+    <link rel="stylesheet" href="/static/_layout/js/magnificpopup/magnific-popup.css">
+    
+    <!-- /// Skin CSS ////////  -->
+    <!-- <link rel="stylesheet" href="/static/_layout/css/skins/default.css"> -->
+    <!-- <link rel="stylesheet" href="/static/_layout/css/skins/blue.css"> -->
+    <!-- <link rel="stylesheet" href="/static/_layout/css/skins/green.css"> -->
+    <!-- <link rel="stylesheet" href="/static/_layout/css/skins/orange.css"> -->
+    <!-- <link rel="stylesheet" href="/static/_layout/css/skins/purple.css"> -->
+    <!-- <link rel="stylesheet" href="/static/_layout/css/skins/red.css"> -->
+    
+    <!-- /// Google Fonts ////////  -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:400,300,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700">
+    
+    <!-- /// FontAwesome Icons 4.0.3 ////////  -->
+	<link rel="stylesheet" href="/static/_layout/css/fontawesome/font-awesome.min.css">
+    
+
+    <!-- /// Modernizr ////////  -->
+    <script src="/static/_layout/js/modernizr-2.6.2.min.js"></script>
+ 
+</head>
+<body>
+
+	
+	
+    <noscript>
+    	<p class="javascript-required"> 
+        	You seem to have Javascript disabled. 
+            This website needs javascript in order to function properly.
+		</p>
+    </noscript>
+    	
+	<!--[if lte IE 8]>
+        <p class="browser-update">
+        	You are using an <strong>outdated</strong> browser. Please 
+        	<a href="https://windows.microsoft.com/en-us/internet-explorer/download-ie">upgrade your browser</a>
+            to improve your experience.
+		</p>
+    <![endif]-->
+ 
+	<div id="wrap">
+	
+		<div id="header">
+        
+		<!-- /// HEADER  //////////////////////////////////////////////////////////////////////////////////////////////////////////// -->				                	
+            
+            <div class="row cv-section">
+                <div class="span6">
+                    
+                    <div class="cv-section-title">
+                        
+                        <img src="/static/_content/headshot.jpg" width="150px" alt="">
+                        
+                        <h1>Alex Abraham</h1>
+                        <p>Data Engineer</p>
+
+
+                    </div><!-- end .cv-section-title -->
+                    
+                </div><!-- end .span6 -->
+                <div class="span6">
+                    
+                    <div class="cv-item">
+                        
+                        <!-- // Menu // -->
+                        <ul class="menu">
+                            <li>
+                                <a href="https://github.com/AlexAbraham1" target="_blank">Github /</a>
+                            </li>
+                            <li>
+                                <a href="/static/_content/AlexAbraham.vcf" target="_blank">Contact Card /</a>
+                            </li>
+                            <li>
+                                <a href="/static/_content/AlexAbraham.pdf" target="_blank">Download Resume /</a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/pub/alex-abraham/38/b98/ba5" target="_blank">LinkedIN /</a>
+                            </li>
+                        </ul>
+                        
+                    </div><!-- end .cv-item -->
+                    
+                </div><!-- end .span6 -->
+            </div><!-- end .cv-section -->		
+
+		<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+		</div><!-- end #header -->
+		<div id="content">
+		
+		<!-- /// CONTENT  /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+			<div class="row cv-section">
+            	<div class="span5">
+                	
+                    <div class="cv-section-title">
+                    	
+                        <h2>
+                        	<span>Personal Information</span>
+                        </h2>                                                
+                        
+                    </div><!-- end .cv-section-title -->
+                    
+                    <ul class="personal-info">
+                        <li>Name: Alex Abraham</li>
+                        <li>Date of birth: May 21<sup>st</sup>, 1994</li>
+                        <li>Address: {{data['contact']['address']}}, {{data['contact']['city']}}, {{data['contact']['state_code']}} {{data['contact']['zip']}}</li>
+                        <li>Phone: <a href="tel:{{data['contact']['phone']}}">{{data['contact']['phone2']}}</a></li>
+                        <li>
+                            Email: <a href="mailto:{{data['contact']['email']}}">{{data['contact']['email']}}</a>
+                        </li>
+                    </ul>
+                    
+                </div><!-- end .span5 -->
+                <div id="interests-section" class="span7">
+                	
+                    <div class="cv-section-title">
+                    	
+                        <h2>
+                        	<span>Interests</span>
+                        </h2>
+                        
+                    </div><!-- end .cv-section-title -->
+                    
+                    <div class="row">
+                        {% for interest in data['interests'] %}
+                            <img class="interest-image" src="/static/_content/interests/{{interest}}.png" alt="{{interest}}" />
+                        {% endfor %}
+                    </div>
+
+                </div><!-- end .span7 -->
+            </div><!-- end .cv-section -->
+
+            <div class="row cv-section">
+                <div class="span12">
+                    
+                    <div class="cv-section-title">
+                        <h2><span>Education</span></h2>
+                    </div>
+                    {% for experience in data['education'] %}
+                        <div class="cv-item">{{experience|safe}}</div>
+                    {% endfor %}
+                
+                </div><!-- end .span12 -->
+            </div><!-- end .cv-section -->
+
+            <div class="row cv-section">
+                <div class="span12">
+                    
+                    <div class="cv-section-title">
+                        <h2><span>Technical Skills</span></h2>
+                    </div>
+                    <div class="row">
+                        {% for key in data['tech_skills_1'] %}
+                            <div class="span3">
+                            <div class="pie-chart" data-percent="{{data['tech_skills_1'][key]}}" data-barColor="#fdb020" data-trackColor="#d9d9d9" data-lineWidth="5" data-barSize="160">
+                                <div class="pie-chart-percent">
+                                    <span></span>
+                                    %
+                                </div>
+                            </div>
+                            <div class="pie-chart-description">
+                                <h3>{{key}}</h3>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="row">
+                        {% for key in data['tech_skills_2'] %}
+                            <div class="span3">
+                            <div class="pie-chart" data-percent="{{data['tech_skills_2'][key]}}" data-barColor="#fdb020" data-trackColor="#d9d9d9" data-lineWidth="5" data-barSize="160">
+                                <div class="pie-chart-percent">
+                                    <span></span>
+                                    %
+                                </div>
+                            </div>
+                            <div class="pie-chart-description">
+                                <h3>{{key}}</h3>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                </div><!-- end .span12 -->
+            </div><!-- end .cv-section -->
+            
+            <div class="row cv-section">
+            	<div class="span12">
+                	
+                    <div class="cv-section-title">
+                        <h2><span>Work Experience</span></h2>
+                    </div>
+
+                    {% for experience in data['work_experience'] %}
+                        <div class="cv-item">{{experience|safe}}</div>
+                    {% endfor %}
+
+                </div><!-- end .span12 -->                
+            </div><!-- end .cv-section -->
+
+            <!--Contact Form -->
+            <div class="row cv-section">
+
+                <div class="cv-section-title">
+                        
+                    <h2>
+                        <span>Contact</span>
+                    </h2>                                                
+                    
+                </div><!-- end .cv-section-title -->
+                
+                <div class="span8">
+                    
+                    <form class="fixed" id="contact-form"  name="contact-form" method="post" action="url_for('send_email')">
+                        <fieldset>
+                            
+                            <div id="formstatus"></div>
+                                    
+                            <input class="span8" id="name" type="text" name="name" value="" placeholder="enter yout name here">
+                        
+                            <input class="span8" id="email" type="text" name="email" value="" placeholder="email address">
+                            
+                            <input class="span8" id="subject" type="text" name="subject" value="" placeholder="subject">
+                            
+                            <textarea class="span8" id="message" name="message" rows="50" cols="25" placeholder="message"></textarea>
+                            
+                            <input id="submit" type="submit" name="submit" value="Send!">
+                               
+                        </fieldset>
+                    </form>
+                    
+                </div><!-- end .span8 -->
+                <div class="span4">
+                    
+                    <address>
+                        {{data['contact']['address']}}<br>
+                        {{data['contact']['city']}}, {{data['contact']['state_code']}} {{data['contact']['zip']}}<br>
+                        Phone: <a href="tel:{{data['contact']['phone']}}">{{data['contact']['phone2']}}</a><br />
+                        E-mail: <a href="mailto:{{data['contact']['email']}}">{{data['contact']['email']}}</a>
+                    </address>
+                    
+                </div><!-- end .span4 -->
+            </div><!-- end .row -->
+            
+		<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+		</div><!-- end #content -->
+		<div id="footer">
+		
+		<!-- /// FOOTER     ///////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+			<div class="row">
+            	<div class="span12">
+                	
+                    <p>&copy; {{data['copyright_year']}} Alex Abraham. <span class="hidden-phone">All rights reserved</span></p>
+                    
+                    <a id="back-to-top" href="#">
+                    	<i class="fa fa-caret-up"></i>
+                        Top
+                    </a>
+                    
+                </div><!-- end .span12 -->
+            </div><!-- end .row -->
+            
+		<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+		</div><!-- end #footer -->
+		
+	</div><!-- end #wrap -->    
+
+
+    <!-- /// jQuery ////////  -->
+	<script src="/static/_layout/js/jquery-2.1.0.min.js"></script>
+  
+    <!-- /// ViewPort ////////  -->
+	<script src="/static/_layout/js/viewport/jquery.viewport.js"></script>
+    
+    <!-- /// Easing ////////  -->
+	<script src="/static/_layout/js/easing/jquery.easing.1.3.js"></script>
+
+    <!-- /// SimplePlaceholder ////////  -->
+	<script src="/static/_layout/js/simpleplaceholder/jquery.simpleplaceholder.js"></script>
+
+    <!-- /// Fitvids ////////  -->
+    <script src="/static/_layout/js/fitvids/jquery.fitvids.js"></script>
+    
+    <!-- /// Superfish Menu ////////  -->
+	<script src="/static/_layout/js/superfish/hoverIntent.js"></script>
+    <script src="/static/_layout/js/superfish/superfish.js"></script>
+    
+    <!-- /// bxSlider ////////  -->
+	<script src="/static/_layout/js/bxslider/jquery.bxslider.min.js"></script>
+    
+   	<!-- /// Magnific Popup ////////  -->
+	<script src="/static/_layout/js/magnificpopup/jquery.magnific-popup.min.js"></script>
+    
+    <!-- /// Isotope ////////  -->
+	<script src="/static/_layout/js/isotope/isotope.pkgd.min.js"></script>
+    <script src="/static/_layout/js/isotope/imagesloaded.pkgd.min.js"></script>
+    
+    <!-- /// Parallax ////////  -->
+	<script src="/static/_layout/js/parallax/jquery.parallax.min.js"></script>
+	
+	<!-- /// EasyPieChart ////////  -->
+	<script src="/static/_layout/js/easypiechart/jquery.easypiechart.min.js"></script>
+    
+    <!-- /// Easy Tabs ////////  -->
+    <script src="/static/_layout/js/easytabs/jquery.easytabs.min.js"></script>
+    
+    <!-- /// Form validate ////////  -->
+    <script src="/static/_layout/js/jqueryvalidate/jquery.validate.min.js"></script>
+    
+	<!-- /// Form submit ////////  -->
+    <script src="/static/_layout/js/jqueryform/jquery.form.min.js"></script>
+    
+
+
+	<!-- /// Custom JS ////////  -->
+	<script src="/static/_layout/js/plugins.js"></script>
+	<script src="/static/_layout/js/scripts.js"></script>
+
+</body>
+</html>
