@@ -55,8 +55,8 @@ def load_home_page_data():
         'tech_skills_2': {
             'Cloud Infrastructure (Azure)': 85,
             'Java': 85,
-            'HTML & CSS': 80,
-            'Javascript': 80
+            'Apache Airflow': 80,
+            'HTML & CSS': 80
         },
         'work_experience': [],
         'copyright_year': '2019'
