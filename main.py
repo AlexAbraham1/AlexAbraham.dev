@@ -15,12 +15,13 @@
 # [START gae_python37_render_template]
 import datetime
 import os
+from natsort import natsorted
 
 from flask import Flask, render_template, request
 import sendgrid
 import traceback
-import secrets
 from validate_email import validate_email
+from firestore import FireStore
 
 app = Flask(__name__)
 
@@ -62,11 +63,11 @@ def load_home_page_data():
         'copyright_year': '2019'
     }
 
-    for path in os.listdir('templates/work_experience'):
+    for path in natsorted(os.listdir('templates/work_experience')):
         with open('templates/work_experience/' + path, 'r', encoding='utf-8') as f:
             data['work_experience'].append(f.read())
 
-    for path in os.listdir('templates/education'):
+    for path in natsorted(os.listdir('templates/education')):
         with open('templates/education/' + path, 'r', encoding='utf-8') as f:
             data['education'].append(f.read())
 
@@ -89,7 +90,7 @@ def send_email():
         return "Please enter a valid message"
 
     try:
-        sg = sendgrid.SendGridClient(secrets.SENDGRID_API_KEY)
+        sg = sendgrid.SendGridClient(FireStore().get_value("SENDGRID_API_KEY"))
         message = sendgrid.Mail()
 
         message.add_to("alex@abraham.net")
