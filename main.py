@@ -36,10 +36,10 @@ def load_home_page_data():
             'email': 'alex@abraham.net',
             'phone': '1-201-403-7591',
             'phone2': '(201) 403-7591',
-            'address': '200 Bennett Ave #2D',
+            'address': '215 West 95th Street',
             'city': 'New York',
             'state_code': 'NY',
-            'zip': '10040'
+            'zip': '10025'
         },
         'interests': [
             'skiing', 'snowboarding', 'running', 'tennis',
@@ -49,18 +49,18 @@ def load_home_page_data():
         'education': [],
         'tech_skills_1': {
             'Python': 95,
-            'MongoDB': 90,
+            'Java': 95,
             'SQL': 90,
             'Angular': 90
         },
         'tech_skills_2': {
-            'Cloud Infrastructure (Azure)': 85,
-            'Java': 85,
+            'Google Cloud Platform': 85,
+            'Kubernetes': 85,
             'Apache Airflow': 80,
-            'HTML & CSS': 80
+            'Go': 80
         },
         'work_experience': [],
-        'copyright_year': '2019'
+        'copyright_year': '2020'
     }
 
     for path in natsorted(os.listdir('templates/work_experience')):
@@ -89,6 +89,9 @@ def send_email():
     if not text:
         return "Please enter a valid message"
 
+    if len(text.strip()) < 15:
+        return "OK"
+
     try:
         sg = sendgrid.SendGridClient(FireStore().get_value("SENDGRID_API_KEY"))
         message = sendgrid.Mail()
@@ -98,11 +101,10 @@ def send_email():
         message.set_subject(subject)
         message.set_html(text)
         sg.send(message)
+        return "OK"
     except:
         traceback.print_exc()
         return "There was an error sending your message. Please try reaching out via email. Thanks!"
-
-    return "OK"
 
 
 if __name__ == '__main__':
