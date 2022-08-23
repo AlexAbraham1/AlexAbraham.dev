@@ -33,13 +33,13 @@ def root():
 def load_home_page_data():
     data = {
         'contact': {
-            'email': 'alex@abraham.net',
+            'email': 'alexgabraham1@gmail.com',
             'phone': '1-201-403-7591',
             'phone2': '(201) 403-7591',
-            'address': '215 West 95th Street',
-            'city': 'New York',
+            'address': '146 McGlynn Place',
+            'city': 'Cedarhurst',
             'state_code': 'NY',
-            'zip': '10025'
+            'zip': '11516'
         },
         'interests': [
             'skiing', 'snowboarding', 'running', 'tennis',
@@ -49,18 +49,18 @@ def load_home_page_data():
         'education': [],
         'tech_skills_1': {
             'Python': 95,
-            'Java': 95,
-            'SQL': 90,
-            'Angular': 90
+            'SQL': 95,
+            'Kafka': 90,
+            'Java': 90
         },
         'tech_skills_2': {
             'Google Cloud Platform': 85,
             'Kubernetes': 85,
             'Apache Airflow': 80,
-            'Go': 80
+            'Javascript': 80
         },
         'work_experience': [],
-        'copyright_year': '2020'
+        'copyright_year': '2022'
     }
 
     for path in natsorted(os.listdir('templates/work_experience')):
@@ -96,7 +96,7 @@ def send_email():
         sg = sendgrid.SendGridClient(FireStore().get_value("SENDGRID_API_KEY"))
         message = sendgrid.Mail()
 
-        message.add_to("alex@abraham.net")
+        message.add_to("alexgabraham1@gmail.com")
         message.set_from("{} <{}>".format(name, email))
         message.set_subject(subject)
         message.set_html(text)

@@ -69,3 +69,9 @@ fabric.properties
 
 # .idea folder
 .idea/
+
+# python cache
+__pycache__/
+
+# macOS
+**/.DS_Store
