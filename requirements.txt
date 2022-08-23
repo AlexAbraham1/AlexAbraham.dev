@@ -42,7 +42,7 @@ sendgrid==2.2.1
 sendgrid-python==0.1.1
 six==1.15.0
 smtpapi==0.3.1
-starkbank-ecdsa==1.1.0
+starkbank-ecdsa==2.0.1
 toml==0.10.2
 uritemplate==3.0.1
 urllib3==1.26.4
