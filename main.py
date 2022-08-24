@@ -98,7 +98,7 @@ def send_email():
 
         from_email = Email("form@alexabraham.net")
         to_email = To("alexgabraham1@gmail.com")
-        subject_email = "Persomal Website Form Submission"
+        subject_email = "Personal Website Form Submission"
         content = Content("text/plain", """
 Name: {}
 Email: {}
