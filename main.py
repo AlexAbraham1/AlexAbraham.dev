@@ -110,7 +110,7 @@ Message: {}
         mail = Mail(from_email, to_email, subject_email, content)
         mail_json = mail.get()
         response = sg.client.mail.send.post(request_body=mail_json)
-        assert response.status_code == 200
+        assert response.status_code == 202
 
         return "OK"
     except:
