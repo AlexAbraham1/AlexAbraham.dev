@@ -19,6 +19,7 @@ from natsort import natsorted
 
 from flask import Flask, render_template, request
 import sendgrid
+from sendgrid.helpers.mail import Mail, Email, To, Content
 import traceback
 from validate_email import validate_email
 from firestore import FireStore
@@ -93,14 +94,24 @@ def send_email():
         return "OK"
 
     try:
-        sg = sendgrid.SendGridClient(FireStore().get_value("SENDGRID_API_KEY"))
-        message = sendgrid.Mail()
+        sg = sendgrid.SendGridAPIClient(api_key=FireStore().get_value("SENDGRID_API_KEY"))
 
-        message.add_to("alexgabraham1@gmail.com")
-        message.set_from("{} <{}>".format(name, email))
-        message.set_subject(subject)
-        message.set_html(text)
-        sg.send(message)
+        from_email = Email("form@alexabraham.net")
+        to_email = To("alexgabraham1@gmail.com")
+        subject_email = "Persomal Website Form Submission"
+        content = Content("text/plain", """
+Name: {}
+Email: {}
+Subject: {}
+Message: {}
+        """.format(name, email, subject, text))
+
+
+        mail = Mail(from_email, to_email, subject_email, content)
+        mail_json = mail.get()
+        response = sg.client.mail.send.post(request_body=mail_json)
+        assert response.status_code == 200
+
         return "OK"
     except:
         traceback.print_exc()
