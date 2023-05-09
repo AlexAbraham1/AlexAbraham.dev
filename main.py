@@ -61,7 +61,7 @@ def load_home_page_data():
             'Javascript': 80
         },
         'work_experience': [],
-        'copyright_year': '2022'
+        'copyright_year': '2023'
     }
 
     for path in natsorted(os.listdir('templates/work_experience')):
