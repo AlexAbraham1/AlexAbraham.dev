@@ -78,7 +78,7 @@
                         <img src="/static/_content/headshot.jpg" width="150px" alt="">
                         
                         <h1>Alex Abraham</h1>
-                        <p>Data Engineer</p>
+                        <p>Engineering Manager</p>
 
 
                     </div><!-- end .cv-section-title -->
@@ -117,6 +117,24 @@
 		<!-- /// CONTENT  /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
 			<div class="row cv-section">
+            	<div class="span12">
+                	
+                    <div class="cv-section-title">
+                    	
+                        <h2>
+                        	<span>Overview</span>
+                        </h2>                                                
+                        
+                    </div><!-- end .cv-section-title -->
+                    
+                    <div class="cv-item">
+                        <p>Engineering Manager and former Senior Software Engineer with 18+ months leading a 10-person team building enterprise software for physical trading card production at Fanatics Collectibles. Proven people leader with a track record of scaling teams, onboarding rapidly, and driving cross-functional alignment across Product, Design, and Engineering. Strong technical foundation with hands-on architecture and code review ownership. Forward-thinking about applied AI — actively identifying practical, high-leverage opportunities to deliver measurable business impact.</p>
+                    </div><!-- end .cv-item -->
+                    
+                </div><!-- end .span12 -->
+            </div><!-- end .cv-section -->
+
+			<div class="row cv-section">
             	<div class="span5">
                 	
                     <div class="cv-section-title">
@@ -130,7 +148,7 @@
                     <ul class="personal-info">
                         <li>Name: Alex Abraham</li>
                         <li>Date of birth: May 21<sup>st</sup>, 1994</li>
-                        <li>Address: {{data['contact']['address']}}, {{data['contact']['city']}}, {{data['contact']['state_code']}} {{data['contact']['zip']}}</li>
+                        <li>Address: {{data['contact']['address']}}, {{data['contact']['city']}} {{data['contact']['state_code']}} {{data['contact']['zip']}}</li>
                         <li>Phone: <a href="tel:{{data['contact']['phone']}}">{{data['contact']['phone2']}}</a></li>
                         <li>
                             Email: <a href="mailto:{{data['contact']['email']}}">{{data['contact']['email']}}</a>
@@ -174,38 +192,46 @@
                 <div class="span12">
                     
                     <div class="cv-section-title">
-                        <h2><span>Technical Skills</span></h2>
+                        <h2><span>Skills</span></h2>
                     </div>
+                    
                     <div class="row">
-                        {% for key in data['tech_skills_1'] %}
-                            <div class="span3">
-                            <div class="pie-chart" data-percent="{{data['tech_skills_1'][key]}}" data-barColor="#fdb020" data-trackColor="#d9d9d9" data-lineWidth="5" data-barSize="160">
-                                <div class="pie-chart-percent">
-                                    <span></span>
-                                    %
-                                </div>
+                        <div class="span6">
+                            <h3 style="text-align: center; margin-bottom: 20px;">Leadership Skills</h3>
+                            <div class="skill-logo-grid">
+                                {% for logo in data['leadership_skills_logos'] %}
+                                    {% if loop.index0 % 3 == 0 %}
+                                    <div class="row">
+                                    {% endif %}
+                                    <div class="span4 skill-logo-item">
+                                        <img src="/static/_content/leadership_skills/{{logo['filename']}}" alt="{{logo['name']}}" />
+                                        <div class="skill-logo-label">{{logo['name']}}</div>
+                                    </div>
+                                    {% if loop.index0 % 3 == 2 or loop.last %}
+                                    </div><!-- end .row -->
+                                    {% endif %}
+                                {% endfor %}
                             </div>
-                            <div class="pie-chart-description">
-                                <h3>{{key}}</h3>
+                        </div><!-- end .span6 -->
+                        
+                        <div class="span6">
+                            <h3 style="text-align: center; margin-bottom: 20px;">Technical Skills</h3>
+                            <div class="skill-logo-grid">
+                                {% for logo in data['tech_skills_logos'] %}
+                                    {% if loop.index0 % 3 == 0 %}
+                                    <div class="row">
+                                    {% endif %}
+                                    <div class="span4 skill-logo-item">
+                                        <img src="/static/_content/tech_skills/{{logo['filename']}}" alt="{{logo['name']}}" />
+                                        <div class="skill-logo-label">{{logo['name']}}</div>
+                                    </div>
+                                    {% if loop.index0 % 3 == 2 or loop.last %}
+                                    </div><!-- end .row -->
+                                    {% endif %}
+                                {% endfor %}
                             </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <div class="row">
-                        {% for key in data['tech_skills_2'] %}
-                            <div class="span3">
-                            <div class="pie-chart" data-percent="{{data['tech_skills_2'][key]}}" data-barColor="#fdb020" data-trackColor="#d9d9d9" data-lineWidth="5" data-barSize="160">
-                                <div class="pie-chart-percent">
-                                    <span></span>
-                                    %
-                                </div>
-                            </div>
-                            <div class="pie-chart-description">
-                                <h3>{{key}}</h3>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
+                        </div><!-- end .span6 -->
+                    </div><!-- end .row -->
                     
                 </div><!-- end .span12 -->
             </div><!-- end .cv-section -->

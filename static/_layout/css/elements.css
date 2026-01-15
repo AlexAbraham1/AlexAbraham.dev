@@ -782,6 +782,123 @@
 	.pie-chart-description p { margin-bottom: 15px; }
 
 /* ==========================================================================
+   #Skill Logo Grid
+   ========================================================================== */
+
+	.skill-logo-grid {
+		display: block;
+		margin-bottom: 30px;
+	}
+
+	.skill-logo-grid .row:first-child {
+		margin-top: 0;
+	}
+
+	.skill-logo-grid .row {
+		margin-bottom: 20px;
+		overflow: visible;
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		min-height: 240px;
+		height: 240px;
+	}
+
+	.skill-logo-grid .row .skill-logo-item {
+		width: 31.33% !important;
+		margin-left: 0 !important;
+		float: none !important;
+	}
+
+	.skill-logo-item {
+		text-align: center;
+		margin-bottom: 0;
+		opacity: 1;
+		transform: scale(1);
+		perspective: 1000px;
+		position: relative;
+		overflow: visible;
+		width: 100%;
+		height: 100%;
+		min-height: 240px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.skill-logo-item img {
+		max-width: 150px;
+		width: 100%;
+		height: auto;
+		display: block;
+		margin: 0 auto 10px auto;
+		transition: transform 0.8s ease;
+		transform-style: preserve-3d;
+		position: relative;
+		z-index: 1;
+	}
+
+	.skill-logo-item.logo-animated::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 50%;
+		margin-left: -75px;
+		width: 45px;
+		height: 150px;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			rgba(255, 255, 255, 0.3) 40%,
+			rgba(255, 255, 255, 0.9) 50%,
+			rgba(255, 255, 255, 0.3) 60%,
+			transparent 100%
+		);
+		animation: shimmerSweep 1.5s ease-out;
+		z-index: 2;
+		pointer-events: none;
+		transform: skewX(-20deg);
+	}
+
+	.skill-logo-item.hover-spin img {
+		animation: logoSpinHover 0.8s ease-out forwards;
+	}
+	
+	@keyframes logoSpinHover {
+		0% {
+			transform: rotateY(0deg);
+		}
+		100% {
+			transform: rotateY(360deg);
+		}
+	}
+
+	.skill-logo-label {
+		font-family: "Open Sans", sans-serif;
+		font-size: 14px;
+		color: #2b3036;
+		margin-top: 15px;
+		line-height: 1.4;
+		text-align: center;
+	}
+
+	.skill-logo-item.logo-animated {
+		animation: lightReflection 1.5s ease-out;
+	}
+
+	@keyframes shimmerSweep {
+		0% {
+			left: -20%;
+			margin-left: -75px;
+		}
+		100% {
+			left: 120%;
+			margin-left: -75px;
+		}
+	}
+
+/* ==========================================================================
    #Pricing Tables
    ========================================================================== */
 

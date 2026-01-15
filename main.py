@@ -31,16 +31,41 @@ def root():
     data = load_home_page_data()
     return render_template('index.html', data=data)
 
+def load_skill_logos(directory):
+    """Load skill logos from a directory and extract skill names from filenames.
+    
+    Args:
+        directory: Path to directory containing logo files
+        
+    Returns:
+        List of dicts with 'filename' and 'name' keys, sorted by filename
+    """
+    logos = []
+    if os.path.exists(directory):
+        for filename in natsorted(os.listdir(directory)):
+            if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.svg')):
+                # Split on "_" to separate number prefix from skill name
+                parts = filename.rsplit('.', 1)[0].split('_', 1)  # Remove extension first, then split
+                if len(parts) > 1:
+                    skill_name = parts[1]  # Take everything after the first underscore
+                else:
+                    skill_name = parts[0]  # Fallback if no underscore
+                logos.append({
+                    'filename': filename,
+                    'name': skill_name
+                })
+    return logos
+
 def load_home_page_data():
     data = {
         'contact': {
             'email': 'alexgabraham1@gmail.com',
             'phone': '1-201-403-7591',
             'phone2': '(201) 403-7591',
-            'address': '146 McGlynn Place',
-            'city': 'Cedarhurst',
+            'address': '64 Meadow Drive',
+            'city': 'Woodmere',
             'state_code': 'NY',
-            'zip': '11516'
+            'zip': '11598'
         },
         'interests': [
             'skiing', 'snowboarding', 'running', 'tennis',
@@ -48,20 +73,10 @@ def load_home_page_data():
             'chilling', 'web_surfing', 'watching_tv', 'games'
         ],
         'education': [],
-        'tech_skills_1': {
-            'Python': 95,
-            'SQL': 95,
-            'Kafka': 90,
-            'Java': 90
-        },
-        'tech_skills_2': {
-            'Google Cloud Platform': 85,
-            'Kubernetes': 85,
-            'Apache Airflow': 80,
-            'Javascript': 80
-        },
+        'tech_skills_logos': load_skill_logos('static/_content/tech_skills'),
+        'leadership_skills_logos': load_skill_logos('static/_content/leadership_skills'),
         'work_experience': [],
-        'copyright_year': '2023'
+        'copyright_year': '2026'
     }
 
     for path in natsorted(os.listdir('templates/work_experience')):
