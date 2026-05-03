@@ -114,6 +114,63 @@
 	}
 
 /* ==========================================================================
+   animateSkillLogos
+   ========================================================================== */
+
+	function animateSkillLogos() {
+
+		$(".skill-logo-item:in-viewport").each(function(index) {
+			
+			var $t = $(this);
+			
+			// Only animate if it hasn't been animated before
+			if (!$t.hasClass("logo-shimmered")) {
+				$t.addClass("logo-shimmered");
+				// Trigger reflection animation with slight stagger
+				setTimeout(function() {
+					$t.addClass("logo-animated");
+					// Remove the animation class after animation completes (but keep logo-shimmered)
+					setTimeout(function() {
+						$t.removeClass("logo-animated");
+					}, 1500);
+				}, 100 + (index * 50));
+			}
+			
+		});
+
+	}
+
+/* ==========================================================================
+   handleSkillLogoHover
+   ========================================================================== */
+
+	function handleSkillLogoHover() {
+
+		$(".skill-logo-item").on("mouseenter", function() {
+			
+			var $t = $(this);
+			var $img = $t.find("img");
+			
+			// Only trigger if not already animating
+			if (!$t.hasClass("hover-spin")) {
+				// Reset transform first
+				$img.css("transform", "rotateY(0deg)");
+				// Add class to trigger animation
+				setTimeout(function() {
+					$t.addClass("hover-spin");
+					// Remove class after animation completes so it can trigger again
+					setTimeout(function() {
+						$t.removeClass("hover-spin");
+						$img.css("transform", "rotateY(0deg)");
+					}, 800);
+				}, 10);
+			}
+			
+		});
+
+	}
+
+/* ==========================================================================
    animateMilestones
    ========================================================================== */
 
@@ -402,6 +459,8 @@
 		animatePieCharts();
 		animateMilestones();
 		animateProgressBars();
+		animateSkillLogos();
+		handleSkillLogoHover();
 
 		if (!isTouchDevice()) {
 			enableParallax();
@@ -427,6 +486,7 @@
 		animateMilestones();
 		animatePieCharts();
 		animateProgressBars();
+		animateSkillLogos();
 
 	});
 
