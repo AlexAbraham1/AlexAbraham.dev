@@ -18,11 +18,9 @@ import os
 from natsort import natsorted
 
 from flask import Flask, render_template, request
-import sendgrid
-from sendgrid.helpers.mail import Mail, Email, To, Content
+import boto3
 import traceback
 from validate_email import validate_email
-from firestore import FireStore
 
 app = Flask(__name__)
 
@@ -109,24 +107,15 @@ def send_email():
         return "OK"
 
     try:
-        sg = sendgrid.SendGridAPIClient(api_key=FireStore().get_value("SENDGRID_API_KEY"))
-
-        from_email = Email("form@alexabraham.net")
-        to_email = To("alexgabraham1@gmail.com")
-        subject_email = "Personal Website Form Submission"
-        content = Content("text/plain", """
-Name: {}
-Email: {}
-Subject: {}
-Message: {}
-        """.format(name, email, subject, text))
-
-
-        mail = Mail(from_email, to_email, subject_email, content)
-        mail_json = mail.get()
-        response = sg.client.mail.send.post(request_body=mail_json)
-        assert response.status_code == 202
-
+        client = boto3.client('ses', region_name='us-east-1')
+        client.send_email(
+            Source='form@alexabraham.net',
+            Destination={'ToAddresses': ['alexgabraham1@gmail.com']},
+            Message={
+                'Subject': {'Data': 'Personal Website Form Submission'},
+                'Body': {'Text': {'Data': 'Name: {}\nEmail: {}\nSubject: {}\nMessage: {}'.format(name, email, subject, text)}}
+            }
+        )
         return "OK"
     except:
         traceback.print_exc()

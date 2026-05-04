@@ -1,0 +1,9 @@
+.ebignore
+.git
+.gitignore
+.gcloudignore
+app.yaml
+appengine_config.py
+.idea/
+__pycache__/
+*.pyc
