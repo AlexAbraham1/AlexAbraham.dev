@@ -1,5 +1,5 @@
 # AlexAbraham.dev
-Personal Website powered by AWS App Runner
+Personal Website — AWS Lambda + API Gateway
 
 ## Local Development
 ```bash
@@ -8,82 +8,86 @@ python main.py
 Runs at http://127.0.0.1:8080
 
 ## Deploy
-Push to `master`. App Runner is wired to this repo and auto-deploys on push.
+```bash
+sam build --use-container
+sam deploy
+```
+
+First deploy use `sam deploy --guided` — saves config to `samconfig.toml`.
+
+## Tests
+```bash
+pytest
+```
+
+---
 
 ## One-Time AWS Setup
 
-### 1. Verify domains in SES
+### 1. Verify domains in SES (already done)
 ```bash
-aws ses verify-domain-identity --domain alexabraham.net --region us-east-1
-aws ses verify-domain-identity --domain alexabraham.dev --region us-east-1
+aws ses get-identity-verification-attributes \
+  --identities alexabraham.net alexabraham.dev --region us-east-1
 ```
-Add the returned TXT records to DNS for each domain.
+Both should show `Success`. Production access should also be granted already.
 
-### 2. Request SES production access
-AWS console → SES → Account dashboard → "Request production access".
-Removes sandbox restrictions so email can be sent to unverified recipients.
-
-### 3. Create App Runner instance role
-This role is assumed by the running container — App Runner's equivalent of an EC2 instance profile.
-
-Trust policy:
-```json
-{
-  "Effect": "Allow",
-  "Principal": { "Service": "tasks.apprunner.amazonaws.com" },
-  "Action": "sts:AssumeRole"
-}
-```
-
-Inline permissions policy (`ses:SendEmail` on both domains):
-```json
-{
-  "Effect": "Allow",
-  "Action": "ses:SendEmail",
-  "Resource": [
-    "arn:aws:ses:us-east-1:*:identity/alexabraham.net",
-    "arn:aws:ses:us-east-1:*:identity/alexabraham.dev"
-  ]
-}
-```
-
-### 4. Create GitHub connection
-AWS console → App Runner → Connections → Create → GitHub → authorize the `AlexAbraham1` account.
-
-### 5. Create the App Runner service
+### 2. Install SAM CLI
 ```bash
-aws apprunner create-service \
-  --service-name alexabraham-prod \
-  --source-configuration '{
-    "AuthenticationConfiguration": { "ConnectionArn": "<connection-arn>" },
-    "AutoDeploymentsEnabled": true,
-    "CodeRepository": {
-      "RepositoryUrl": "https://github.com/AlexAbraham1/AlexAbraham.dev",
-      "SourceCodeVersion": { "Type": "BRANCH", "Value": "master" },
-      "CodeConfiguration": { "ConfigurationSource": "REPOSITORY" }
-    }
-  }' \
-  --instance-configuration '{
-    "Cpu": "256", "Memory": "512",
-    "InstanceRoleArn": "arn:aws:iam::<acct>:role/AppRunnerInstanceRole-alexabraham"
-  }' \
-  --region us-east-1
+pip install aws-sam-cli
 ```
 
-### 6. Pin auto-scaling to a single warm instance (avoids cold starts)
+### 3. First deploy
 ```bash
-aws apprunner create-auto-scaling-configuration \
-  --auto-scaling-configuration-name alexabraham-min \
-  --min-size 1 --max-size 1 --max-concurrency 100 --region us-east-1
-aws apprunner update-service --service-arn <svc-arn> \
-  --auto-scaling-configuration-arn <asc-arn> --region us-east-1
+sam build --use-container
+sam deploy --guided
 ```
+Prompts:
+- Stack name: `alexabraham-site`
+- Region: `us-east-1`
+- Allow SAM to create IAM roles: **Yes**
+- Save to `samconfig.toml`: **Yes**
 
-### 7. Associate custom domains
+Note the `ApiUrl` output — use this to verify the site before DNS cutover.
+
+### 4. Custom domains (after verifying the default ApiUrl works)
+
+**Request ACM certs (must be in us-east-1):**
 ```bash
-aws apprunner associate-custom-domain --service-arn <svc-arn> \
-  --domain-name alexabraham.net --enable-www-subdomain --region us-east-1
-aws apprunner associate-custom-domain --service-arn <svc-arn> \
-  --domain-name alexabraham.dev --enable-www-subdomain --region us-east-1
+aws acm request-certificate --domain-name alexabraham.net \
+  --subject-alternative-names www.alexabraham.net \
+  --validation-method DNS --region us-east-1
+
+aws acm request-certificate --domain-name alexabraham.dev \
+  --subject-alternative-names www.alexabraham.dev \
+  --validation-method DNS --region us-east-1
 ```
-Add the returned cert-validation CNAMEs and target CNAMEs at your DNS provider. Apex records require ALIAS / ANAME / CNAME-flattening (Route 53 ALIAS, Cloudflare CNAME-flattening, etc.).
+Add the returned CNAME validation records to DNS. Wait for `Status: ISSUED`.
+
+**Add custom domain resources to `template.yaml`** (one pair per domain):
+```yaml
+NetDomain:
+  Type: AWS::ApiGatewayV2::DomainName
+  Properties:
+    DomainName: alexabraham.net
+    DomainNameConfigurations:
+      - CertificateArn: <net-cert-arn>
+        EndpointType: REGIONAL
+        SecurityPolicy: TLS_1_2
+NetMapping:
+  Type: AWS::ApiGatewayV2::ApiMapping
+  Properties:
+    ApiId: !Ref SiteHttpApi
+    DomainName: !Ref NetDomain
+    Stage: $default
+```
+Repeat for `alexabraham.dev`. Then `sam deploy`.
+
+**DNS** (apex requires ALIAS/ANAME — not plain CNAME):
+- Apex (`alexabraham.net`, `alexabraham.dev`): Route 53 ALIAS A/AAAA → API GW regional domain, or ANAME if using Cloudflare/DNSimple
+- `www`: plain CNAME → API GW regional domain
+
+### 5. GCP cutover
+1. Lower TTL on GCP DNS records to 60s (24–48 hours in advance)
+2. Verify Lambda site end-to-end on custom domain (form submission delivers email)
+3. Swap DNS from GCP App Engine targets to API GW targets
+4. Soak 24–48 hours, then decommission GCP App Engine

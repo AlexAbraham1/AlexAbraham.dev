@@ -122,5 +122,8 @@ def send_email():
         return "There was an error sending your message. Please try reaching out via email. Thanks!"
 
 
+from apig_wsgi import make_lambda_handler
+handler = make_lambda_handler(app, binary_support=True)
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)

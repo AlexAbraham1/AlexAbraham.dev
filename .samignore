@@ -1,0 +1,10 @@
+.git
+.gitignore
+.vscode
+__pycache__
+*.pyc
+main_test.py
+README.md
+CLAUDE.md
+.aws-sam
+.idea

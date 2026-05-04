@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AlexAbraham.dev portfolio site on Lambda + API Gateway HTTP API
+
+Globals:
+  Function:
+    Runtime: python3.13
+    Architectures: [arm64]
+    MemorySize: 1024
+    Timeout: 30
+
+Resources:
+  SiteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: alexabraham-site
+      CodeUri: .
+      Handler: main.handler
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: ses:SendEmail
+              Resource:
+                - !Sub arn:aws:ses:us-east-1:${AWS::AccountId}:identity/alexabraham.net
+                - !Sub arn:aws:ses:us-east-1:${AWS::AccountId}:identity/alexabraham.dev
+      Events:
+        ApiRoot:
+          Type: HttpApi
+          Properties: { ApiId: !Ref SiteHttpApi, Path: /, Method: GET }
+        ApiSendEmail:
+          Type: HttpApi
+          Properties: { ApiId: !Ref SiteHttpApi, Path: /send_email, Method: POST }
+        ApiStatic:
+          Type: HttpApi
+          Properties: { ApiId: !Ref SiteHttpApi, Path: /static/{proxy+}, Method: GET }
+
+  SiteHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: $default
+
+  SiteLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${SiteFunction}
+      RetentionInDays: 14
+
+Outputs:
+  ApiUrl:
+    Description: HTTP API default endpoint (use to verify before DNS cutover)
+    Value: !Sub https://${SiteHttpApi}.execute-api.${AWS::Region}.amazonaws.com/
