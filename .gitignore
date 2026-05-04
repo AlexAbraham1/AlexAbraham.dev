@@ -75,3 +75,6 @@ __pycache__/
 
 # macOS
 **/.DS_Store
+
+# SAM build artifacts
+.aws-sam/

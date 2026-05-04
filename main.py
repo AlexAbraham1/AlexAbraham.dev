@@ -23,6 +23,8 @@ import traceback
 from validate_email import validate_email
 
 app = Flask(__name__)
+STATIC_URL = os.environ.get('STATIC_URL', '/static')
+app.jinja_env.globals['STATIC_URL'] = STATIC_URL
 
 @app.route('/')
 def root():
@@ -79,11 +81,11 @@ def load_home_page_data():
 
     for path in natsorted(os.listdir('templates/work_experience')):
         with open('templates/work_experience/' + path, 'r', encoding='utf-8') as f:
-            data['work_experience'].append(f.read())
+            data['work_experience'].append(f.read().replace('/static', STATIC_URL))
 
     for path in natsorted(os.listdir('templates/education')):
         with open('templates/education/' + path, 'r', encoding='utf-8') as f:
-            data['education'].append(f.read())
+            data['education'].append(f.read().replace('/static', STATIC_URL))
 
     return data
 

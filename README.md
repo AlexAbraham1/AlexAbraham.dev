@@ -11,7 +11,11 @@ Runs at http://127.0.0.1:8080
 ```bash
 sam build --use-container
 sam deploy
+BUCKET=$(aws cloudformation describe-stacks --stack-name alexabraham-site \
+  --query 'Stacks[0].Outputs[?OutputKey==`StaticBucketName`].OutputValue' --output text)
+aws s3 sync ./static/ s3://$BUCKET/
 ```
+The S3 sync is required whenever files in `./static/` change — Lambda only serves dynamic routes; assets are served from S3.
 
 First deploy use `sam deploy --guided` — saves config to `samconfig.toml`.
 
@@ -45,7 +49,15 @@ Prompts:
 - Stack name: `alexabraham-site`
 - Region: `us-east-1`
 - Allow SAM to create IAM roles: **Yes**
+- `SiteFunction has no authentication. Is this okay?`: **Yes** (answer for each prompt — site is intentionally public)
 - Save to `samconfig.toml`: **Yes**
+
+Then upload static assets to the S3 bucket created by the stack:
+```bash
+BUCKET=$(aws cloudformation describe-stacks --stack-name alexabraham-site \
+  --query 'Stacks[0].Outputs[?OutputKey==`StaticBucketName`].OutputValue' --output text)
+aws s3 sync ./static/ s3://$BUCKET/
+```
 
 Note the `ApiUrl` output — use this to verify the site before DNS cutover.
 

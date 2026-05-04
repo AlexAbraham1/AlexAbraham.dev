@@ -5,7 +5,7 @@ Description: AlexAbraham.dev portfolio site on Lambda + API Gateway HTTP API
 Globals:
   Function:
     Runtime: python3.13
-    Architectures: [arm64]
+    Architectures: [x86_64]
     MemorySize: 1024
     Timeout: 30
 
@@ -16,6 +16,9 @@ Resources:
       FunctionName: alexabraham-site
       CodeUri: .
       Handler: main.handler
+      Environment:
+        Variables:
+          STATIC_URL: !Sub https://${StaticBucket}.s3.${AWS::Region}.amazonaws.com
       Policies:
         - Statement:
             - Effect: Allow
@@ -26,18 +29,45 @@ Resources:
       Events:
         ApiRoot:
           Type: HttpApi
-          Properties: { ApiId: !Ref SiteHttpApi, Path: /, Method: GET }
-        ApiSendEmail:
+          Properties:
+            ApiId: !Ref SiteHttpApi
+            Path: /
+            Method: ANY
+        ApiProxy:
           Type: HttpApi
-          Properties: { ApiId: !Ref SiteHttpApi, Path: /send_email, Method: POST }
-        ApiStatic:
-          Type: HttpApi
-          Properties: { ApiId: !Ref SiteHttpApi, Path: /static/{proxy+}, Method: GET }
+          Properties:
+            ApiId: !Ref SiteHttpApi
+            Path: /{proxy+}
+            Method: ANY
 
   SiteHttpApi:
     Type: AWS::Serverless::HttpApi
     Properties:
       StageName: $default
+
+  StaticBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-static-${AWS::AccountId}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+
+  StaticBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref StaticBucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Sub ${StaticBucket.Arn}/*
 
   SiteLogGroup:
     Type: AWS::Logs::LogGroup
@@ -49,3 +79,6 @@ Outputs:
   ApiUrl:
     Description: HTTP API default endpoint (use to verify before DNS cutover)
     Value: !Sub https://${SiteHttpApi}.execute-api.${AWS::Region}.amazonaws.com/
+  StaticBucketName:
+    Description: S3 bucket name for static assets (sync ./static/ here after deploy)
+    Value: !Ref StaticBucket
