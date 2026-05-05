@@ -45,6 +45,70 @@ Resources:
     Properties:
       StageName: $default
 
+  NetDomain:
+    Type: AWS::ApiGatewayV2::DomainName
+    Properties:
+      DomainName: alexabraham.net
+      DomainNameConfigurations:
+        - CertificateArn: arn:aws:acm:us-east-1:539234858520:certificate/f5185e62-1a91-41ea-973d-8e16a9561c1c
+          EndpointType: REGIONAL
+          SecurityPolicy: TLS_1_2
+
+  NetApexMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Properties:
+      ApiId: !Ref SiteHttpApi
+      DomainName: !Ref NetDomain
+      Stage: $default
+
+  NetWwwDomain:
+    Type: AWS::ApiGatewayV2::DomainName
+    Properties:
+      DomainName: www.alexabraham.net
+      DomainNameConfigurations:
+        - CertificateArn: arn:aws:acm:us-east-1:539234858520:certificate/f5185e62-1a91-41ea-973d-8e16a9561c1c
+          EndpointType: REGIONAL
+          SecurityPolicy: TLS_1_2
+
+  NetWwwMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Properties:
+      ApiId: !Ref SiteHttpApi
+      DomainName: !Ref NetWwwDomain
+      Stage: $default
+
+  DevDomain:
+    Type: AWS::ApiGatewayV2::DomainName
+    Properties:
+      DomainName: alexabraham.dev
+      DomainNameConfigurations:
+        - CertificateArn: arn:aws:acm:us-east-1:539234858520:certificate/4e830a38-07db-4e5a-81a5-0781b1eba5fb
+          EndpointType: REGIONAL
+          SecurityPolicy: TLS_1_2
+
+  DevApexMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Properties:
+      ApiId: !Ref SiteHttpApi
+      DomainName: !Ref DevDomain
+      Stage: $default
+
+  DevWwwDomain:
+    Type: AWS::ApiGatewayV2::DomainName
+    Properties:
+      DomainName: www.alexabraham.dev
+      DomainNameConfigurations:
+        - CertificateArn: arn:aws:acm:us-east-1:539234858520:certificate/4e830a38-07db-4e5a-81a5-0781b1eba5fb
+          EndpointType: REGIONAL
+          SecurityPolicy: TLS_1_2
+
+  DevWwwMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Properties:
+      ApiId: !Ref SiteHttpApi
+      DomainName: !Ref DevWwwDomain
+      Stage: $default
+
   StaticBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -82,3 +146,15 @@ Outputs:
   StaticBucketName:
     Description: S3 bucket name for static assets (sync ./static/ here after deploy)
     Value: !Ref StaticBucket
+  NetDomainTarget:
+    Description: API GW regional domain for alexabraham.net — DNS ALIAS A/AAAA target
+    Value: !GetAtt NetDomain.RegionalDomainName
+  NetWwwDomainTarget:
+    Description: API GW regional domain for www.alexabraham.net — DNS CNAME target
+    Value: !GetAtt NetWwwDomain.RegionalDomainName
+  DevDomainTarget:
+    Description: API GW regional domain for alexabraham.dev — DNS ALIAS A/AAAA target
+    Value: !GetAtt DevDomain.RegionalDomainName
+  DevWwwDomainTarget:
+    Description: API GW regional domain for www.alexabraham.dev — DNS CNAME target
+    Value: !GetAtt DevWwwDomain.RegionalDomainName
